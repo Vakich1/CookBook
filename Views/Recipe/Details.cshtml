@@ -1,0 +1,112 @@
+@using System.Globalization
+@model CookBook.Models.Recipe
+
+@{
+    ViewData["Title"] = Model.Title;
+    var canEdit = false;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>@Model.Title</h1>
+            <hr />
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="rating-container "
+                 data-recipe-id="@Model.Id"
+                 data-current-rating="@((Model.Rating ?? 0).ToString(CultureInfo.InvariantCulture))"
+                 data-rating-count="@Model.RatingCount"
+                 data-user-rating="@(ViewBag.UserRating?.ToString(CultureInfo.InvariantCulture) ?? "")"
+                 data-readonly="false">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Фото рецепта -->
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <img src="@Model.ImagePath" alt="@Model.Title" class="img-fluid rounded shadow" />
+            </div>
+        </div>
+    }
+    
+    <!-- Основная информация -->
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Время приготовления</dt>
+                <dd class="col-sm-8">@Model.CookingTime минут</dd>
+                
+                <dt class="col-sm-4">Категория</dt>
+                <dd class="col-sm-8">@(Model.Category?.Name ?? "Без категории")</dd>
+                
+                <dt class="col-sm-4">Автор</dt>
+                <dd class="col-sm-8">@(Model.User?.UserName ?? "Неизвестный")</dd>
+                
+                <dt class="col-sm-4">Дата создания</dt>
+                <dd class="col-sm-8">@Model.CreatedAt.ToString("dd.MM.yyyy")</dd>
+            </dl>
+        </div>
+    </div>
+    
+    <!-- Ингредиенты -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4>Ингредиенты</h4>
+            <div class="border p-3 bg-light rounded">
+                @Html.Raw(Model.Ingredients?.Replace("\n", "<br />"))
+            </div>
+        </div>
+    </div>
+    
+    <!-- Инструкция -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4>Инструкция приготовления</h4>
+            <div class="border p-3 bg-light rounded">
+                @Html.Raw(Model.Instruction?.Replace("\n", "<br />"))
+            </div>
+        </div>
+    </div>
+    
+    <!-- Кнопки навигации -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <!-- Кнопка "Назад" -->
+            @if (ViewBag.ReturnUrl == "MyRecipes")
+            {
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Назад к моим рецептам
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Назад к каталогу
+                </a>
+            }
+            
+            <!-- Кнопки редактирования и удаления — только для автора -->
+            @if (ViewBag.CanEdit == true)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Редактировать
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/rating.js"></script>
+    <link rel="stylesheet" href="~/css/rating.css" />
+}

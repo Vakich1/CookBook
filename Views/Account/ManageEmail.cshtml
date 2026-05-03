@@ -1,0 +1,67 @@
+@model ManageEmailViewModel
+
+@{
+    ViewData["Title"] = "Управление email";
+}
+
+<div class="account-page">
+    <div class="page-header">
+        <h2>@ViewData["Title"]</h2>
+        <p>Управление вашим email адресом</p>
+    </div>
+
+    <div class="profile-layout">
+        <partial name="_ProfileSidebar" />
+
+        <div class="profile-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info">@TempData["InfoMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <div class="info-row">
+                <div class="info-label">Текущий email</div>
+                <div class="info-value">@Model.CurrentEmail</div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Статус подтверждения</div>
+                <div class="info-value">
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <span class="text-success">Подтверждён</span>
+                    }
+                    else
+                    {
+                        <span class="text-warning">Не подтверждён</span>
+                    }
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="d-flex gap-2">
+                @if (!Model.IsEmailConfirmed)
+                {
+                    <form asp-action="SendEmailConfirmation" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-envelope-paper"></i> Отправить подтверждение
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}

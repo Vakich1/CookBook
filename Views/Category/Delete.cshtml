@@ -1,0 +1,30 @@
+@model CookBook.Models.Category
+
+@{
+    ViewData["Title"] = "Удаление категории";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Категория</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="alert alert-danger">
+            <h5>Вы уверены, что хотите удалить эту категорию?</h5>
+            <p class="mb-0">Внимание: это действие нельзя отменить.</p>
+        </div>
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+    </form>
+</div>

@@ -1,0 +1,38 @@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="account-page">
+    <div class="page-header">
+        <h2>Аккаунт</h2>
+        <p>Управление вашим профилем</p>
+    </div>
+
+    <div class="profile-layout">
+        <partial name="_ProfileSidebar" />
+
+        <!-- Контент справа -->
+        <div class="profile-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+
+            <div class="info-row">
+                <div class="info-label">Email</div>
+                <div class="info-value">@user?.Email</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Имя пользователя</div>
+                <div class="info-value">@user?.UserName</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}

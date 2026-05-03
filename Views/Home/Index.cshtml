@@ -1,0 +1,369 @@
+﻿@using System.Globalization
+@model IEnumerable<CookBook.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Каталог рецептов";
+    var pagination = ViewBag.Pagination as PaginationInfo;
+    var searchQuery = ViewBag.SearchQuery as string;
+    var isSearching = ViewBag.IsSearching == true;
+    var currentSort = ViewBag.CurrentSort as string ?? "top_rated";
+}
+
+<div class="container">
+    <!-- Поисковая строка -->
+    <div class="row justify-content-center mt-4 mb-4">
+        <div class="col-md-8">
+            <form asp-action="Index" method="get" id="searchForm">
+                <div class="input-group">
+                    <input type="text" 
+                           name="searchQuery" 
+                           class="form-control" 
+                           placeholder="Поиск рецептов по названию..." 
+                           value="@searchQuery">
+        
+                    <input type="hidden" name="sortOrder" value="@currentSort" />
+                    <input type="hidden" name="categoryIds" value="@ViewBag.CategoryIds" />
+        
+                    @if (isSearching)
+                    {
+                        <a href="@Url.Action("Index", new { sortOrder = currentSort, categoryIds = ViewBag.CategoryIds })" 
+                           class="btn btn-outline-secondary" title="Сбросить поиск">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    }
+        
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Заголовок, сортировка и фильтрация -->
+    <div class="d-flex justify-content-between align-items-start my-4 flex-wrap gap-3">
+        <h1 class="mb-0">
+            @if (isSearching)
+            {
+                <span>Результаты поиска</span>
+            }
+            else
+            {
+                <span>@ViewData["Title"]</span>
+            }
+        </h1>
+        
+        <div class="d-flex gap-3">
+            <!-- Выпадающий список сортировки -->
+            <div class="sorting-dropdown">
+                <label for="sortSelect" class="me-2 text-muted">Сначала:</label>
+                <select id="sortSelect" class="form-select form-select-sm w-auto d-inline-block">
+                    <option value="newest" selected="@(currentSort == "newest")">Новые</option>
+                    <option value="oldest" selected="@(currentSort == "oldest")">Старые</option>
+                    <option value="top_rated" selected="@(currentSort == "top_rated")">С наибольшим рейтингом</option>
+                    <option value="most_rated" selected="@(currentSort == "most_rated")">С наибольшим количеством оценок</option>
+                    <option value="time_asc" selected="@(currentSort == "time_asc")">По времени (сначала быстрые)</option>
+                    <option value="time_desc" selected="@(currentSort == "time_desc")">По времени (сначала долгие)</option>
+                </select>
+            </div>
+            
+            <!-- Фильтр по категориям -->
+            <div class="category-filter">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                    <i class="bi bi-funnel"></i> Категории
+                    @if (ViewBag.SelectedCategoryIds != null && ((List<int>)ViewBag.SelectedCategoryIds).Any())
+                    {
+                        <span class="badge ms-1">@(((List<int>)ViewBag.SelectedCategoryIds).Count)</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Отображение выбранных категорий -->
+    @if (ViewBag.SelectedCategoryIds != null && ((List<int>)ViewBag.SelectedCategoryIds).Any())
+    {
+        <div class="selected-categories">
+            <span class="categories-label">Выбранные категории:</span>
+            @foreach (var category in ViewBag.AllCategories as List<Category>)
+            {
+                if (((List<int>)ViewBag.SelectedCategoryIds).Contains(category.Id))
+                {
+                    <span class="category-tag">
+                        @category.Name
+                        <a href="#" class="remove-category" data-category-id="@category.Id">&times;</a>
+                    </span>
+                }
+            }
+            <a href="#" id="clearAllCategories" class="clear-all">Очистить всё</a>
+        </div>
+    }
+
+    <!-- Модальное окно выбора категорий -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Фильтр по категориям</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAllCategories"/>
+                            <label class="form-check-label fw-bold" for="selectAllCategories">
+                                Все категории
+                            </label>
+                        </div>
+                        <hr />
+                        <div class="category-list">
+                            @if (ViewBag.AllCategories != null)
+                            {
+                                foreach (var category in ViewBag.AllCategories)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input category-checkbox" type="checkbox" 
+                                               value="@category.Id" id="cat_@category.Id"/>
+                                        <label class="form-check-label" for="cat_@category.Id">
+                                            @category.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-muted">Нет доступных категорий</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="applyCategoryFilter">Применить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            @if (isSearching)
+            {
+                <i class="bi bi-emoji-frown"></i>
+                <span>По вашему запросу ничего не найдено. Попробуйте изменить поисковый запрос.</span>
+            }
+            else
+            {
+                <i class="bi bi-info-circle"></i>
+                <span>Пока нет ни одного рецепта. Будьте первым!</span>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Сетка карточек -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4">
+            @foreach (var recipe in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <!-- Фото рецепта -->
+                        @if (!string.IsNullOrEmpty(recipe.ImagePath))
+                        {
+                            <img src="@recipe.ImagePath" class="card-img-top" alt="@recipe.Title" 
+                                 style="height: 220px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                 style="height: 220px;">
+                                <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                            </div>
+                        }
+                        
+                        <!-- Тело карточки -->
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate fw-bold">@recipe.Title</h5>
+                            <div class="small text-muted mb-2">
+                                <div class="star-rating-static mt-1 mb-1">
+                                    <partial name="_StarRatingStatic" model="recipe" />
+                                </div>
+                                <div class="mb-1">
+                                    <i class="bi bi-person"></i> @(recipe.User?.UserName ?? "Неизвестный")
+                                </div>
+                                <div>
+                                    <i class="bi bi-calendar"></i> @recipe.CreatedAt.ToString("dd.MM.yyyy")
+                                </div>
+                                @if (recipe.CookingTime > 0)
+                                {
+                                    <div class="mt-1">
+                                        <i class="bi bi-clock"></i> @recipe.CookingTime мин
+                                    </div>
+                                }
+                            </div>
+                            
+                            <p class="card-text small text-secondary">
+                                @if (!string.IsNullOrEmpty(recipe.Ingredients))
+                                {
+                                    var shortIngredients = recipe.Ingredients.Length > 120 
+                                        ? recipe.Ingredients.Substring(0, 120) + "..." 
+                                        : recipe.Ingredients;
+                                    @shortIngredients
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Нет описания</span>
+                                }
+                            </p>
+                        </div>
+                        
+                        <!-- Кнопка деталей -->
+                        <div class="card-footer bg-transparent border-top-0 pt-0">
+                            <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" 
+                               asp-route-returnUrl="Home"
+                               class="btn btn-outline-primary w-100">
+                                Подробнее →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <!-- Пагинация -->
+        @if (pagination != null && pagination.TotalPages > 1)
+        {
+            <partial name="_Pagination" model="pagination" />
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const sortSelect = document.getElementById('sortSelect');
+        const applyFilterBtn = document.getElementById('applyCategoryFilter');
+        const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+        const selectAllCheckbox = document.getElementById('selectAllCategories');
+        const removeCategoryLinks = document.querySelectorAll('.remove-category');
+        const clearAllLink = document.getElementById('clearAllCategories');
+        const categoryModal = document.getElementById('categoryModal');
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentSearchQuery = urlParams.get('searchQuery') || '';
+        let currentSortOrder = urlParams.get('sortOrder') || 'top-rated';
+        let currentCategoryIds = urlParams.get('categoryIds') || '';
+        
+        function buildUrlWithParams(sortOrder, searchQuery, categoryIds) {
+            const params = new URLSearchParams();
+
+            if (sortOrder && sortOrder !== 'top-rated')
+                params.set('sortOrder', sortOrder);
+
+            if (searchQuery)
+                params.set('searchQuery', searchQuery);
+
+            if (categoryIds) 
+                params.set('categoryIds', categoryIds);
+            
+            let url = '@Url.Action("Index", "Home")';
+            const queryString = params.toString();
+            if (queryString)
+                url += '?' + queryString;
+
+            return url;
+        }
+        
+        function applyFiltersAndReload() {
+            const selectedCategories = [];
+            document.querySelectorAll('.category-checkbox:checked').forEach(cb => {
+                if (cb.id !== 'selectAllCategories' && cb.value)
+                    selectedCategories.push(cb.value);
+            });
+            
+            const categoryIds = selectedCategories.join(',');
+            const url = buildUrlWithParams(currentSortOrder, currentSearchQuery, categoryIds);
+            window.location.href = url; 
+        }
+        
+        function syncCheckboxesFromUrl() {
+            const selectedIds = currentCategoryIds ? currentCategoryIds.split(',') : [];
+            
+            categoryCheckboxes.forEach(cb => {
+                cb.checked = selectedIds.includes(cb.value)
+            });
+            
+            updateSelectAllState();
+        }
+        
+        function updateSelectAllState() {
+            if (!selectAllCheckbox) return;
+            
+            const hasSelectedCategories = Array.from(categoryCheckboxes).some(cb => cb.checked);
+            selectAllCheckbox.checked = !hasSelectedCategories;
+        }
+        
+        if (applyFilterBtn) {
+            applyFilterBtn.addEventListener('click', function () {
+                const selectedCategories = [];
+                document.querySelectorAll('.category-checkbox:checked').forEach(cb => {
+                    if (cb.id !== 'selectAllCategories' && cb.value)
+                        selectedCategories.push(cb.value);
+                });
+
+                const newCategoryIds = selectedCategories.join(',');
+                const url = buildUrlWithParams(currentSortOrder, currentSearchQuery, newCategoryIds);
+                window.location.href = url;
+            });
+        }
+
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function() {
+                currentSortOrder = this.value;
+                const url = buildUrlWithParams(currentSortOrder, currentSearchQuery, currentCategoryIds);
+                window.location.href = url;
+            });
+        }
+        
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function () {
+                if (this.checked)
+                    categoryCheckboxes.forEach(cb => cb.checked = false);
+                
+                updateSelectAllState();
+            });
+        }
+
+        categoryCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateSelectAllState);
+        })
+        
+        if (categoryModal) {
+            categoryModal.addEventListener('show.bs.modal', syncCheckboxesFromUrl);
+        }
+        
+        removeCategoryLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const categoryId = this.dataset.categoryId;
+
+                let selectedIds = currentCategoryIds ? currentCategoryIds.split(',') : [];
+                selectedIds = selectedIds.filter(id => id !== categoryId);
+                
+                const newCategoryIds = selectedIds.join(',');
+                const url = buildUrlWithParams(currentSortOrder, currentSearchQuery, newCategoryIds);
+                window.location.href = url;
+            });
+        });
+        
+        if (clearAllLink) {
+            clearAllLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                const url = buildUrlWithParams(currentSortOrder, currentSearchQuery, '');
+                window.location.href = url;
+            });
+        }
+    </script>
+    <script src="~/js/rating.js"></script>
+    <link rel="stylesheet" href="~/css/rating.css" />
+}

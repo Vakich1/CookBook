@@ -1,0 +1,59 @@
+@model CookBook.Models.Recipe
+
+@{
+    ViewData["Title"] = "Удаление рецепта";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Вы уверены, что хотите удалить этот рецепт?</h4>
+<hr />
+
+<div>
+    <h3>@Model.Title</h3>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Категория</dt>
+                <dd class="col-sm-8">@(Model.Category?.Name ?? "Без категории")</dd>
+                
+                <dt class="col-sm-4">Время</dt>
+                <dd class="col-sm-8">@Model.CookingTime минут</dd>
+                
+                <dt class="col-sm-4">Автор</dt>
+                <dd class="col-sm-8">@(Model.User?.UserName ?? "Неизвестный")</dd>
+                
+                <dt class="col-sm-4">Дата</dt>
+                <dd class="col-sm-8">@Model.CreatedAt.ToString("dd.MM.yyyy")</dd>
+            </dl>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <h5>Ингредиенты</h5>
+            <div class="border p-3 bg-light">
+                @Html.Raw(Model.Ingredients?.Replace("\n", "<br />"))
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <h5>Инструкция</h5>
+            <div class="border p-3 bg-light">
+                @Html.Raw(Model.Instruction?.Replace("\n", "<br />"))
+            </div>
+        </div>
+    </div>
+    
+    <form asp-action="Delete" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        <div class="alert alert-danger">
+            <p class="mb-0"><strong>Внимание!</strong> Это действие нельзя отменить.</p>
+        </div>
+        <input type="submit" value="Удалить" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+    </form>
+</div>

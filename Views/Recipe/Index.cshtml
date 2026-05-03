@@ -1,0 +1,82 @@
+@model IEnumerable<CookBook.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Мои рецепты";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h1>@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Добавить рецепт
+        </a>
+    </div>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle"></i> У вас пока нет рецептов.
+            <a asp-action="Create" class="alert-link">Создайте первый рецепт!</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Фото</th>
+                        <th>Название</th>
+                        <th>Категория</th>
+                        <th>Время приготовления (мин)</th>
+                        <th>Дата создания</th>
+                        <th>Рейтинг</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var recipe in Model)
+                    {
+                        <tr>
+                            <td style="width: 80px;">
+                                @if (!string.IsNullOrEmpty(recipe.ImagePath))
+                                {
+                                    <img src="@recipe.ImagePath" alt="@recipe.Title" 
+                                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                }
+                                else
+                                {
+                                    <div class="bg-light d-flex align-items-center justify-content-center" 
+                                         style="width: 60px; height: 60px; border-radius: 8px;">
+                                        <i class="bi bi-image text-muted"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@recipe.Id" asp-route-returnUrl="MyRecipes" class="text-decoration-none fw-bold">
+                                    @recipe.Title
+                                </a>
+                            </td>
+                            <td>@(recipe.Category?.Name ?? "—")</td>
+                            <td>@recipe.CookingTime</td>
+                            <td>@recipe.CreatedAt.ToString("dd.MM.yyyy")</td>
+                            <td>@(recipe.Rating ?? 0) (@recipe.RatingCount оценок)</td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-action="Edit" asp-route-id="@recipe.Id" 
+                                       class="btn btn-outline-warning">
+                                        <i class="bi bi-pencil"></i> Изменить
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@recipe.Id" 
+                                       class="btn btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Удалить
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

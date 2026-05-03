@@ -1,0 +1,51 @@
+@model PaginationInfo
+@{
+    var searchQuery = Context.Request.Query["searchQuery"].ToString();
+    var sortOrder = Context.Request.Query["sortOrder"].ToString();
+    var categoryIds = Context.Request.Query["categoryIds"].ToString();
+    if (string.IsNullOrEmpty(sortOrder)) sortOrder = "top-rated";
+}
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Кнопка "Первая" -->
+            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="1" 
+                   asp-route-searchQuery="@searchQuery" asp-route-sortOrder="@sortOrder" asp-route-categoryIds="@categoryIds">&laquo;&laquo;</a>
+            </li>
+            
+            <!-- Кнопка "Предыдущая" -->
+            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)"
+                   asp-route-searchQuery="@searchQuery" asp-route-sortOrder="@sortOrder" asp-route-categoryIds="@categoryIds">&laquo;</a>
+            </li>
+            
+            <!-- Номера страниц -->
+            @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i"
+                       asp-route-searchQuery="@searchQuery" asp-route-sortOrder="@sortOrder" asp-route-categoryIds="@categoryIds">@i</a>
+                </li>
+            }
+            
+            <!-- Кнопка "Следующая" -->
+            <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)"
+                   asp-route-searchQuery="@searchQuery" asp-route-sortOrder="@sortOrder" asp-route-categoryIds="@categoryIds">&raquo;</a>
+            </li>
+            
+            <!-- Кнопка "Последняя" -->
+            <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-page="@Model.TotalPages"
+                   asp-route-searchQuery="@searchQuery" asp-route-sortOrder="@sortOrder" asp-route-categoryIds="@categoryIds">&raquo;&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="text-center text-muted small mt-2">
+        Страница @Model.CurrentPage из @Model.TotalPages (всего @Model.TotalItems рецептов)
+    </div>
+}

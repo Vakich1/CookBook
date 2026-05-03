@@ -1,0 +1,249 @@
+/* Контейнер рейтинга */
+.rating-container {
+    display: inline-block;
+    margin: 10px 0;
+}
+
+/* Обёртка для звёзд */
+.star-rating {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.stars-container {
+    display: flex;
+    gap: 8px;
+    position: relative;
+}
+
+/* Обёртка для одной звезды - увеличиваем размер */
+.star-wrapper {
+    position: relative;
+    cursor: pointer;
+    font-size: 42px;  /* увеличенный размер звёзд */
+    line-height: 1;
+    transition: transform 0.1s ease;
+}
+
+/* Эффект при наведении */
+.star-wrapper:hover {
+    transform: scale(1.05);
+}
+
+/* Базовая звезда (серая) */
+.star {
+    color: #e0e0e0;
+    display: inline-block;
+}
+
+/* Залитая звезда (жёлтая) */
+.star-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: #ffc107;
+    white-space: nowrap;
+    transition: width 0.1s ease;
+}
+
+/* Информация о рейтинге */
+.rating-info {
+    font-size: 16px;
+    color: #666;
+    padding: 5px 10px;
+    background: #f8f9fa;
+    border-radius: 20px;
+}
+
+.average-rating {
+    font-weight: bold;
+    color: #ffc107;
+    font-size: 18px;
+}
+
+.rating-count {
+    font-size: 14px;
+    color: #888;
+}
+
+/* Модальное окно подтверждения */
+.rating-confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.rating-confirm-modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 32px;
+    min-width: 320px;
+    text-align: center;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.2s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rating-confirm-modal-content h4 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 20px;
+}
+
+/* Предпросмотр звёзд в модальном окне */
+.modal-stars {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0;
+    font-size: 36px;
+}
+
+.modal-stars .star-preview {
+    position: relative;
+    display: inline-block;
+}
+
+.modal-stars .star-preview .star-full {
+    color: #ffc107;
+}
+
+.modal-stars .star-preview .star-half {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    overflow: hidden;
+    color: #ffc107;
+}
+
+.modal-stars .star-preview .star-gray {
+    color: #e0e0e0;
+}
+
+.rating-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffc107;
+    margin: 15px 0;
+}
+
+.rating-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.rating-buttons button {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-confirm {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.btn-confirm:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+/* Уведомления */
+.rating-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1001;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.rating-notification.show {
+    opacity: 1;
+}
+
+.rating-notification-success {
+    background-color: #28a745;
+}
+
+.rating-notification-warning {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.rating-notification-error {
+    background-color: #dc3545;
+}
+
+/* Режим только для чтения */
+[data-read-only="true"] .star-wrapper {
+    cursor: default;
+}
+
+[data-read-only="true"] .star-wrapper:hover {
+    transform: none;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    .star-wrapper {
+        font-size: 32px;
+    }
+
+    .rating-info {
+        font-size: 14px;
+    }
+
+    .rating-confirm-modal-content {
+        margin: 20px;
+        padding: 20px;
+        min-width: auto;
+    }
+
+    .modal-stars {
+        font-size: 28px;
+    }
+}

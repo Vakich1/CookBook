@@ -1,0 +1,17 @@
+@{
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<div class="profile-sidebar">
+    <div class="nav flex-column">
+        <a asp-action="Profile" class="nav-link @(currentAction == "Profile" ? "active" : "")">
+            <i class="bi bi-person"></i> Профиль
+        </a>
+        <a asp-action="ChangePassword" class="nav-link @(currentAction == "ChangePassword" ? "active" : "")">
+            <i class="bi bi-key"></i> Сменить пароль
+        </a>
+        <a asp-action="ManageEmail" class="nav-link @(currentAction == "ManageEmail" ? "active" : "")">
+            <i class="bi bi-envelope"></i> Управление email
+        </a>
+    </div>
+</div>

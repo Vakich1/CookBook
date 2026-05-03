@@ -1,0 +1,31 @@
+@model CookBook.Models.Recipe
+
+@{
+    var ratingValue = Model.Rating ?? 0;
+    var fullStars = (int)Math.Floor(ratingValue);
+    var hasHalfStar = (ratingValue - fullStars) >= 0.5;
+    var emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+}
+
+<div class="star-rating-static">
+    @for (int i = 0; i < fullStars; i++)
+    {
+        <span class="star-full">★</span>
+    }
+    
+    @if (hasHalfStar)
+    {
+        <span class="star-half-wrapper">
+            <span class="star-empty">★</span>
+            <span class="star-half">★</span>
+        </span>
+    }
+    
+    @for (int i = 0; i < emptyStars; i++)
+    {
+        <span class="star-empty">★</span>
+    }
+    
+    <span class="rating-value">@ratingValue.ToString("F1")</span>
+    <span class="rating-count">(@Model.RatingCount)</span>
+</div>

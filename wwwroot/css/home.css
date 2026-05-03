@@ -1,0 +1,543 @@
+/* ===== Общие стили для главной страницы ===== */
+
+/* Поисковая строка */
+.search-section {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-form .input-group {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.search-form .form-control {
+    border-radius: 8px 0 0 8px;
+    border: 1px solid #e0e0e0;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.search-form .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: none;
+}
+
+.search-form .btn-primary {
+    border-radius: 0 8px 8px 0;
+    padding: 0 1.5rem;
+}
+
+.search-form .btn-outline-secondary {
+    border-radius: 0;
+    border-left: none;
+    padding: 0 1rem;
+    transition: all 0.2s ease;
+}
+
+.search-form .btn-outline-secondary:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Карточки рецептов */
+.recipe-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+}
+
+.recipe-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12) !important;
+}
+
+.recipe-card .card-img-top {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    background-color: #f8f9fa;
+    object-fit: cover;
+}
+
+.recipe-card .card-body {
+    padding: 1.25rem;
+}
+
+.recipe-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #2c3e50;
+}
+
+.recipe-card .card-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-top: 0.75rem;
+}
+
+.recipe-card .card-footer {
+    background: white;
+    border-top: none;
+    padding: 0 1.25rem 1.25rem 1.25rem;
+}
+
+/* Информация об авторе и дате */
+.recipe-meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.recipe-meta i {
+    margin-right: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.recipe-meta .meta-item {
+    margin-bottom: 0.35rem;
+}
+
+/* Кнопка подробнее */
+.btn-outline-primary {
+    border-radius: 30px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Заголовок страницы */
+.page-header {
+    margin-bottom: 1rem;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Alert сообщения */
+.alert-info, .alert-warning {
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+}
+
+.alert i {
+    margin-right: 0.5rem;
+}
+
+/* Пагинация */
+.pagination {
+    gap: 0.25rem;
+}
+
+.pagination .page-link {
+    border-radius: 8px;
+    color: #0d6efd;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: #0d6efd;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.pagination .active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.pagination .disabled .page-link {
+    color: #adb5bd;
+    cursor: not-allowed;
+}
+
+.pagination .disabled .page-link:hover {
+    transform: none;
+    background-color: transparent;
+    color: #adb5bd;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .search-form .form-control {
+        font-size: 0.9rem;
+    }
+
+    .recipe-card .card-title {
+        font-size: 0.95rem;
+    }
+
+    .recipe-meta {
+        font-size: 0.7rem;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-section {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-form .form-control {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .search-form .btn-primary,
+    .search-form .btn-outline-secondary {
+        padding: 0.5rem 1rem;
+    }
+
+    .recipe-card .card-body {
+        padding: 0.75rem;
+    }
+
+    .pagination .page-link {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Сортировка */
+.sorting-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sorting-dropdown label {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.sorting-dropdown select {
+    min-width: 290px;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sorting-dropdown select:hover {
+    border-color: #ffc107;
+}
+
+.sorting-dropdown select:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+
+    .sorting-dropdown {
+        width: 100%;
+    }
+
+    .sorting-dropdown select {
+        flex: 1;
+        min-width: auto;
+    }
+}
+
+/* ===== Фильтр категорий ===== */
+
+/* Кнопка открытия модального окна */
+.category-filter .btn {
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.category-filter .btn:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #333;
+}
+
+.category-filter .badge {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 20px;
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* Модальное окно */
+#categoryModal .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+}
+
+#categoryModal .modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 16px 20px;
+    background-color: #f8f9fa;
+    border-radius: 16px 16px 0 0;
+}
+
+#categoryModal .modal-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+}
+
+#categoryModal .modal-body {
+    padding: 20px;
+}
+
+#categoryModal .modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 12px 20px;
+    background-color: #f8f9fa;
+    border-radius: 0 0 16px 16px;
+}
+
+/* Чекбокс "Все категории" */
+#selectAllCategories {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #ffc107;  
+}
+
+#selectAllCategories:checked {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+#selectAllCategories + label {
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Контейнер со списком категорий */
+.category-list {
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 4px 8px;
+    margin-top: 8px;
+}
+
+/* Стилизация скроллбара */
+.category-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.category-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+.category-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Элемент категории */
+.category-list .form-check {
+    padding: 10px 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+
+.category-list .form-check:last-child {
+    border-bottom: none;
+}
+
+.category-list .form-check:hover {
+    background-color: #fff9e6;
+    border-radius: 8px;
+    padding-left: 8px;
+    margin-left: -8px;
+}
+
+/* Чекбокс категории */
+.category-list .form-check-input {
+    width: 18px;
+    height: 18px;
+    margin: 0 12px 0 0;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.category-list .form-check-input:checked {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* Метка категории */
+.category-list .form-check-label {
+    cursor: pointer;
+    margin: 0;
+    font-size: 14px;
+    color: #444;
+    transition: color 0.2s ease;
+}
+
+.category-list .form-check:hover .form-check-label {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+/* Кнопки модального окна */
+#categoryModal .btn-secondary {
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+    color: #495057;
+    border-radius: 20px;
+    padding: 6px 20px;
+    font-size: 14px;
+}
+
+#categoryModal .btn-secondary:hover {
+    background-color: #dee2e6;
+    border-color: #dee2e6;
+}
+
+#categoryModal .btn-primary {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #333;
+    border-radius: 20px;
+    padding: 6px 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#categoryModal .btn-primary:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+    color: #333;
+}
+
+/* Выбранные категории */
+.selected-categories {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.selected-categories .categories-label {
+    font-size: 13px;
+    color: #6c757d;
+    margin-right: 4px;
+}
+
+.selected-categories .category-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.selected-categories .category-tag:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.selected-categories .category-tag .remove-category {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 1;
+    margin-left: 2px;
+}
+
+.selected-categories .category-tag .remove-category:hover {
+    color: #c82333;
+}
+
+.selected-categories .clear-all {
+    font-size: 12px;
+    color: #dc3545;
+    text-decoration: none;
+    margin-left: 8px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.selected-categories .clear-all:hover {
+    background-color: #f8d7da;
+    text-decoration: none;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .category-filter .btn {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    #categoryModal .modal-dialog {
+        margin: 10px;
+    }
+
+    .category-list {
+        max-height: 280px;
+    }
+
+    .category-list .form-check {
+        padding: 8px 0;
+    }
+
+    .category-list .form-check-label {
+        font-size: 13px;
+    }
+
+    .selected-categories {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .selected-categories .badge {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+}
